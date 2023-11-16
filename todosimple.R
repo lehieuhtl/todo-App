@@ -1,10 +1,12 @@
 install.packages('shiny')
 install.packages('shinydashboard')
 install.packages('shinyjs')
+install.packages('clock')
 
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
+library(clock)
 
 #Creating a simple to-doList
 ui = dashboardPage(
@@ -24,7 +26,7 @@ ui = dashboardPage(
       width = 3,
       solidHeader = TRUE,
       title = "Clock",
-      div(id = "clock", style ="font-size: 20px; text-align: center;")
+      clockOutput("clock", width = "100%")
     )
   )
 )
@@ -49,15 +51,25 @@ server = function(input, output, session) {
     })
     tagList(tasks_html)
   })
-  #Updates the clock every second
+
+  
+    #Updates the clock every second
   observe({
-    shinyjs::runjs("setInterval(function() { Shiny.onInputChange('clock', newDate().toLocaleTimeString()) }, 1000;")
-  })
-  #Display clock
-  output$clock = renderText({
-    input$clock
+    shinyjs::runjs("
+      setInterval(function() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        var timeString = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        document.getElementById('clock').innerText = timeString;
+      }, 1000);
+    ")
   })
 }
+  
+
+
 
 shinyApp(ui, server)
 runApp(Users/hieule/Desktop/MiscProjects/R.projects/todo)
