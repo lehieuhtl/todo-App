@@ -2,11 +2,14 @@ install.packages('shiny')
 install.packages('shinydashboard')
 install.packages('shinyjs')
 install.packages('clock')
+install.packages('htmlwidgets')
+
 
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
 library(clock)
+library(htmlwidgets)
 
 #Creating a simple to-doList
 ui = dashboardPage(
@@ -20,15 +23,11 @@ ui = dashboardPage(
     #Display todo list Output
     h3("What am i doing?"),
     uiOutput("todolist"),
-    
-    #Addition of clock
-    box(
-      width = 3,
-      solidHeader = TRUE,
-      title = "Clock",
-      clockOutput("clock", width = "100%")
-    )
-  )
+    # Addition of clock
+
+  ),
+  # Include the external JavaScript file
+  includeScript("clock.html")
 )
 
 #Server logic
@@ -52,20 +51,6 @@ server = function(input, output, session) {
     tagList(tasks_html)
   })
 
-  
-    #Updates the clock every second
-  observe({
-    shinyjs::runjs("
-      setInterval(function() {
-        var now = new Date();
-        var hours = now.getHours();
-        var minutes = now.getMinutes();
-        var seconds = now.getSeconds();
-        var timeString = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-        document.getElementById('clock').innerText = timeString;
-      }, 1000);
-    ")
-  })
 }
   
 
