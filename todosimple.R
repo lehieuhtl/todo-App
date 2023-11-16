@@ -14,13 +14,14 @@ ui = dashboardPage(
     
     #Display todo list Output
     h3("What am i doing?"),
-    verbatimTextOutput("todolist")
+    uiOutput("todolist")
   )
 )
 
 #Server logic
-server = function(input, output) {
+server = function(input, output, session) {
   tasks = reactiveVal(character(0))
+  
   observeEvent(input$add, {
     new_task = isolate(input$task)
     if (new_task != "") {
@@ -29,8 +30,8 @@ server = function(input, output) {
     }
   })
   #Display the list
-  output$todolist = renderPrint({
-    tasks()
+  output$todolist = renderUI({
+    HTML(paste(tasks(), collapse = "<br/>"))
   })
 }
 
