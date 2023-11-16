@@ -35,7 +35,7 @@ server = function(input, output) {
 }
 
 shinyApp(ui, server)
-
+runApp(Users/hieule/Desktop/MiscProjects/R.projects/todo)
 
 
 
