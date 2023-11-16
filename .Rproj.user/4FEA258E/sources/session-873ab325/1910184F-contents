@@ -31,7 +31,12 @@ server = function(input, output, session) {
   })
   #Display the list
   output$todolist = renderUI({
-    HTML(paste(tasks(), collapse = "<br/>"))
+    tasks_html = lapply(tasks(), function(task) {
+      tags$p(
+        style = "border-bottom: 1px solid #ddd; padding-bottom: 5px;",
+        HTML(paste("<strong>", task, "</strong>")))
+    })
+    tagList(tasks_html)
   })
 }
 
